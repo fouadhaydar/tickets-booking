@@ -9,5 +9,5 @@ export const TextInputStyled = styled(TextInput);
 export const ContainerView = styled(View, "flex flex-row");
 export const Avatar = styled(
   View,
-  "border-[1px] border-solid border-[black] rounded-full w-20 h-20 items-center justify-center"
+  "border-[1px] border-solid border-[black] rounded-full w-20 h-20 items-center justify-center overflow-hidden border-gray-500"
 );
