@@ -1,18 +1,16 @@
 using System.Linq.Expressions;
 using AutoMapper;
-using backend.API.Models;
 using backend.API.Repository.IRepository;
+using Postgrest.Models;
 
 namespace backend.API.Repository;
 
-public class Repository<T> : IRepository<T> where T : MyBaseModel, new()
+public class Repository<T> : IRepository<T> where T : BaseModel, new()
 {
     private readonly Supabase.Client _supabaseClient;
-    private readonly IMapper _mapper;
-    public Repository(Supabase.Client supabaseClient, IMapper mapper)
+    public Repository(Supabase.Client supabaseClient)
     {
         _supabaseClient = supabaseClient;
-        _mapper = mapper;
     }
 
     public async Task<bool> Add(T entity)
@@ -21,10 +19,10 @@ public class Repository<T> : IRepository<T> where T : MyBaseModel, new()
         return true;
     }
 
-    public async Task<bool> Exists(int id)
+    public async Task<bool> Exists(Predicate<T> match)
     {
         var item = await _supabaseClient.From<T>().Get();
-        var exists = item.Models.Find(x => x.PrimaryKey.Equals(id));
+        var exists = item.Models.Find(match);
 
         if (exists != null)
         {
@@ -48,25 +46,18 @@ public class Repository<T> : IRepository<T> where T : MyBaseModel, new()
         return item;
     }
 
-    public async Task<T> GetById(int id)
-    {
-        var item = await _supabaseClient.From<T>().Get();
-        var user = item.Models.Find(x => x.Id == id);
-
-        return user;
-    }
-
     public Task Remove(T entity)
     {
         throw new NotImplementedException();
     }
 
-    public async Task Update(int id, Expression<Func<T, object>> keySelector, object? value)
+    public async Task<bool> Update(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> keySelector, object? value)
     {
-        await _supabaseClient
+        var result = await _supabaseClient
           .From<T>()
-          .Where(x => x.Id == id)
+          .Where(predicate)
           .Set(keySelector, value)
           .Update();
+        return true;
     }
 }

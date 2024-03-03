@@ -13,7 +13,7 @@ public class UnitOfWork : IUnitOfWork
     {
         _supabaseClient = supabaseClient;
         _mapper = mapper;
-        User = new UserRepository(_supabaseClient, mapper);
 
+        User = new UserRepository(_supabaseClient, mapper);
     }
 }

@@ -4,8 +4,10 @@ using Postgrest.Models;
 namespace backend.API.Models;
 
 [Table("Movie")]
-public class Movie : MyBaseModel
+public class Movie : BaseModel
 {
+    [PrimaryKey("Id")]
+    public int Id { get; set; }
     [Column("MediaType")]
     public string MediaType { get; set; }
     [Column("MediaId")]

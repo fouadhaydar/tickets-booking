@@ -1,14 +1,25 @@
-
+using backend.API.Configuration;
 using backend.API.Repository;
 using backend.API.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+#region Configure section
+builder.Services.Configure<TMDBApiConfig>(builder.Configuration.GetSection("TMDBApiConfig"));
+#endregion
 
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("movieApp", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+    });
+});
 
 #region supabase configuration
 var url = builder.Configuration["SUPABASE_URL"];
@@ -22,10 +33,6 @@ builder.Services.AddSingleton(provider => new Supabase.Client(url, key, options)
 #endregion
 
 #region autoMapper configuration
-/*
-this is a dependency injection and i need a package called 
-AutoMapper.Extensions.Microsoft.DependencyInjection to be able to work with
-*/
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 #endregion
 
@@ -45,5 +52,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors("movieApp");
 app.Run();
