@@ -4,8 +4,10 @@ using Postgrest.Models;
 namespace backend.API.Models;
 
 [Table("Ticket")]
-public class Ticket : MyBaseModel
+public class Ticket : BaseModel
 {
+    [PrimaryKey("Id")]
+    public int Id { get; set; }
     [Column("SeatsReservation")]
     public int[] SeatsReservation { get; set; }
     // Foreign key properties

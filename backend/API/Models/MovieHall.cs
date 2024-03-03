@@ -5,8 +5,10 @@ using Postgrest.Models;
 namespace backend.API.Models;
 
 [Table("MovieHall")]
-public class MovieHall : MyBaseModel
+public class MovieHall : BaseModel
 {
+    [PrimaryKey("Id")]
+    public int Id { get; set; }
     [Column("DateOfMovie")]
     public DateTime DateOfMovie { get; set; }
     [Column("SeatsReservation")]

@@ -4,8 +4,10 @@ using Postgrest.Models;
 namespace backend.API.Models;
 
 [Table("User")]
-public class User : MyBaseModel
+public class User : BaseModel
 {
+    [PrimaryKey("Id")]
+    public int Id { get; set; }
     [Column("UserName")]
     public string UserName { get; set; }
     [Column("Password")]
