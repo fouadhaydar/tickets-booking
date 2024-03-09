@@ -26,17 +26,17 @@ const ReviewCard: FC<ReviewCardType> = ({
   const { hours, minutes } = hoursAndMinutes(time);
   return (
     <StyledView className="bg-gray-500 rounded-lg p-3">
-      <StyledText className="font-bold text-lg text-white">{title}</StyledText>
-      <StyledText className="text-sm text-gray-100">
+      <StyledText class="font-bold text-lg text-white">{title}</StyledText>
+      <StyledText class="text-sm text-gray-100">
         {hours}h {minutes}m {date}
       </StyledText>
       <StyledView>
-        <StyledView className="flex-row items-center gap-1 mt-3">
-          <StyledText className="text-sm text-gray-100">
+        <StyledView className="flex-row items-center mt-3">
+          <StyledText class="text-sm text-gray-100">
             Review {review} / 10
           </StyledText>
         </StyledView>
-        <StyledText className="text-sm text-gray-100">
+        <StyledText class="text-sm text-gray-100">
           Vote Count: {voteCount}
         </StyledText>
       </StyledView>

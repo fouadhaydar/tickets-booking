@@ -1,6 +1,11 @@
-import { Image, ScrollView, VirtualizedList } from "react-native";
+import { Image, ScrollView } from "react-native";
 import { FC } from "react";
-import { Container, StyledText, StyledView } from "../../StyledComponents";
+import {
+  Container,
+  SafeAreaViewStyled,
+  StyledText,
+  StyledView,
+} from "../../StyledComponents";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../Navigation/NavigationType";
 import { RouteProp } from "@react-navigation/native";
@@ -42,9 +47,9 @@ const Details: FC<DetailsType> = ({ navigation, route }) => {
 
   if (isError) {
     return (
-      <StyledView>
+      <SafeAreaViewStyled>
         <StyledText>Some error was append</StyledText>
-      </StyledView>
+      </SafeAreaViewStyled>
     );
   } else {
     const ReviewData = {
@@ -56,113 +61,121 @@ const Details: FC<DetailsType> = ({ navigation, route }) => {
       trailerUrl: data?.video || "",
     };
     return (
-      <ScrollView>
-        <StyledView>
+      <SafeAreaViewStyled>
+        <ScrollView>
           <StyledView>
-            <Image
-              source={{
-                uri: baseImagePath("w780", data?.poster_path || ""),
-              }}
-              style={{
-                width: "100%",
-                height: 500,
-              }}
-            />
-          </StyledView>
-        </StyledView>
-        <Container className="gap-y-5 mt-[24px]">
-          <ReviewCard {...ReviewData} />
-          <StyledView className="gap-y-2">
-            <StyledView className="flex-row gap-x-1">
-              <StyledText>Movie Genre:</StyledText>
-              {data?.genres.map((genre, index) => {
-                return (
-                  <StyledText className="text-gray-700" key={genre.id}>
-                    {genre.name}
-                    {index !== data.genres.length - 1 ? "," : "."}
-                  </StyledText>
-                );
-              })}
-            </StyledView>
-            <StyledText className="text-gray-700">
-              Censorship:{" "}
-              <StyledText className="font-bold text-black "> 13 + </StyledText>
-            </StyledText>
-            <StyledText className="font-bold text-blackflex-row">
-              Spoken Languages:{" "}
-              {data?.spoken_languages.map((lan, index) => (
-                <StyledText
-                  className=" font-normal text-gray-700"
-                  key={lan.name}
-                >
-                  {" "}
-                  {lan.name}
-                  {index !== data.spoken_languages.length - 1 ? "," : "."}
-                </StyledText>
-              ))}
-            </StyledText>
-          </StyledView>
-          <StyledView className="gap-y-2">
-            <StyledText className="font-bold text-xl">Overview</StyledText>
-            <StyledText>{data?.overview}</StyledText>
-          </StyledView>
-          <StyledView className="gap-y-2">
-            <StyledText className="font-bold text-xl">
-              Top Popular Cast
-            </StyledText>
-            {crewAndCast && (
-              <FlatList
-                data={sortedCrewAndCast?.slice(0, 5)}
-                renderItem={({ item }) => {
-                  return (
-                    <CrewCard
-                      profile_path={item.profile_path}
-                      name={item.name}
-                    />
-                  );
-                }}
-                initialNumToRender={10}
-                horizontal={true}
-                keyExtractor={(item) => item.name}
-                showsHorizontalScrollIndicator={false}
-              />
-            )}
-          </StyledView>
-          <StyledView className="gap-y-2">
-            <StyledText className="font-bold text-xl">Directores</StyledText>
             <StyledView>
+              <Image
+                source={{
+                  uri: baseImagePath("w780", data?.poster_path || ""),
+                }}
+                style={{
+                  width: "100%",
+                  height: 500,
+                }}
+              />
+            </StyledView>
+          </StyledView>
+          <Container className="gap-y-5 mt-[24px]">
+            <ReviewCard {...ReviewData} />
+            <StyledView
+              style={{
+                rowGap: 4,
+              }}
+            >
+              <StyledView
+                className="flex-row"
+                style={{
+                  rowGap: 4,
+                }}
+              >
+                <StyledText class="font-bold">Movie Genre: </StyledText>
+                {data?.genres.map((genre, index) => {
+                  return (
+                    <StyledText class="text-gray-700" key={genre.id}>
+                      {genre.name}
+                      {index !== data.genres.length - 1 ? "," : "."}
+                    </StyledText>
+                  );
+                })}
+              </StyledView>
+              <StyledText class="text-gray-700 font-bold">
+                Censorship:{" "}
+                <StyledText class="font-bold text-black "> 13 + </StyledText>
+              </StyledText>
+              <StyledText class="font-bold text-blackflex-row">
+                Spoken Languages:{" "}
+                {data?.spoken_languages.map((lan, index) => (
+                  <StyledText class=" font-normal text-gray-700" key={lan.name}>
+                    {" "}
+                    {lan.name}
+                    {index !== data.spoken_languages.length - 1 ? "," : "."}
+                  </StyledText>
+                ))}
+              </StyledText>
+            </StyledView>
+            <StyledView className="gap-y-2">
+              <StyledText class="font-bold text-xl">Overview</StyledText>
+              <StyledText>{data?.overview}</StyledText>
+            </StyledView>
+            <StyledView className="gap-y-2">
+              <StyledText class="font-bold text-xl">
+                Top Popular Cast
+              </StyledText>
               {crewAndCast && (
                 <FlatList
-                  data={crewAndCast.crew}
+                  data={sortedCrewAndCast?.slice(0, 5)}
                   renderItem={({ item }) => {
-                    if (item.job.includes("Director"))
-                      return (
-                        <CrewCard
-                          profile_path={item.profile_path}
-                          name={item.name}
-                          job={item.job}
-                        />
-                      );
-                    else return <></>;
+                    return (
+                      <CrewCard
+                        profile_path={item.profile_path}
+                        name={item.name}
+                      />
+                    );
                   }}
                   initialNumToRender={10}
                   horizontal={true}
+                  keyExtractor={(item) => item.name}
                   showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item) => item.name.concat(item.job)}
                 />
               )}
             </StyledView>
-          </StyledView>
-          <StyledView>
-            <CustomeBtn
-              title={"Select a Seat"}
-              handlePress={() => {
-                navigation.navigate("selectSeats", { id: route.params.id });
-              }}
-            />
-          </StyledView>
-        </Container>
-      </ScrollView>
+            <StyledView className="gap-y-2">
+              <StyledText class="font-bold text-xl">Directores</StyledText>
+              <StyledView>
+                {crewAndCast && (
+                  <FlatList
+                    data={crewAndCast.crew}
+                    renderItem={({ item }) => {
+                      if (item.job.includes("Director"))
+                        return (
+                          <CrewCard
+                            profile_path={item.profile_path}
+                            name={item.name}
+                            job={item.job}
+                          />
+                        );
+                      else return <></>;
+                    }}
+                    initialNumToRender={10}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.name.concat(item.job)}
+                  />
+                )}
+              </StyledView>
+            </StyledView>
+            <StyledView>
+              <CustomeBtn
+                title={"Select a Seat"}
+                handlePress={() => {
+                  navigation.navigate("selectSeats", { id: route.params.id });
+                }}
+              />
+            </StyledView>
+          </Container>
+        </ScrollView>
+      </SafeAreaViewStyled>
     );
   }
 };

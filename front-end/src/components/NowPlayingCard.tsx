@@ -28,7 +28,7 @@ const NowPlayingCard: FC<NowPlayingType> = ({ Movie, closeModal }) => {
 
   return (
     <PressableStyeld
-      className="max-w-[400px] border-solid border-black rounded-2xl border-[1px]"
+      className="max-w-[400px] border-solid border-gray-500 rounded-2xl border-[1px]"
       onPress={() => handlePress(Movie.id.toString())}
       style={{
         overflow: "hidden",
@@ -38,14 +38,14 @@ const NowPlayingCard: FC<NowPlayingType> = ({ Movie, closeModal }) => {
         source={{ uri: baseImagePath("w780", Movie.poster_path) }}
         style={{ width: 350, height: 350 }}
       />
-      <StyledView className="p-3 gap-y-2">
-        <StyledText className="text-xl font-bold">{Movie.title}</StyledText>
-        <StyledText className="text-[14px] text-gray-500">
+      <StyledView className="p-3" style={{ rowGap: 8 }}>
+        <StyledText class="text-xl font-bold">{Movie.title}</StyledText>
+        <StyledText class="text-[14px] text-gray-500">
           {/* 2h29m • Action, adventure, sci-fi */}
           Release Date: {Movie.release_date}
         </StyledText>
         <StyledText>Rating: {Movie.vote_average} / 10</StyledText>
-        <StyledText className="text-[14px] text-gray-500">
+        <StyledText class="text-[14px] text-gray-500">
           Voter Numbers:{Movie.vote_count}
         </StyledText>
       </StyledView>

@@ -1,4 +1,4 @@
-import { Text, View, SafeAreaView } from "react-native";
+import { Text, View } from "react-native";
 import React, { FC } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CustomeBtn from "../../components/CustomeBtn";
@@ -6,7 +6,9 @@ import {
   Avatar,
   Container,
   ContainerView,
+  StyledText,
   StyledView,
+  SafeAreaViewStyled,
 } from "../../StyledComponents";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../Navigation/NavigationType";
@@ -19,18 +21,15 @@ type ProfileType = {
 
 const Profile: FC<ProfileType> = ({ navigation }) => {
   return (
-    <SafeAreaView style={{ width: "100%", height: "100%" }}>
+    <SafeAreaViewStyled>
       <Container className="h-full justify-end gap-y-[100px] w-[90%] mx-auto">
         <ContainerView className="items-center">
           <ContainerView className="items-center w-full justify-center gap-5">
             <Avatar>
-              <Ionicons name="person" size={24} color="black" />
+              <Ionicons name="person" size={24} color={"gray"} />
             </Avatar>
             <View style={{ gap: 5 }}>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                {" "}
-                {"User Name"}
-              </Text>
+              <StyledText class="text-[20px] font-bold">User Name</StyledText>
             </View>
           </ContainerView>
         </ContainerView>
@@ -61,7 +60,7 @@ const Profile: FC<ProfileType> = ({ navigation }) => {
           </StyledView>
         }
       </Container>
-    </SafeAreaView>
+    </SafeAreaViewStyled>
   );
 };
 
