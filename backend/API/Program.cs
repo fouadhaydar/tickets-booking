@@ -52,5 +52,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors("movieApp");
+// app.UseCors("movieApp");
 app.Run();

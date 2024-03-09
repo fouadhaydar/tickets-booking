@@ -10,4 +10,5 @@ public interface IRepository<T> where T : class
     public Task Remove(T entity);
     public Task<bool> Exists(Predicate<T> match);
     public Task<T> Find(Predicate<T> match);
+    public Task<List<T>> FindAll(Predicate<T> match);
 }
