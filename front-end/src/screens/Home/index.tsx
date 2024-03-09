@@ -1,6 +1,11 @@
 import React, { FC, useEffect } from "react";
 import { useColorScheme } from "nativewind";
-import { Container, StyledText, StyledView } from "../../StyledComponents";
+import {
+  Container,
+  StyledText,
+  StyledView,
+  SafeAreaViewStyled,
+} from "../../StyledComponents";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import {
@@ -8,15 +13,15 @@ import {
   RootTabParamsLits,
 } from "../../Navigation/NavigationType";
 import { Ionicons } from "@expo/vector-icons";
-import { FlatList, SafeAreaView, ScrollView, Text } from "react-native";
+import { FlatList, ScrollView, Text } from "react-native";
 import CustomeInput from "../../components/CustomeSearch";
 import SectionHeader from "../../components/SectionHeader";
 import NowPlayingCard from "../../components/NowPlayingCard";
 import MovieCard from "../../components/MovieCard";
 import { useFetchData } from "../../hooks/useFetchMovies";
-import { Platform } from "react-native";
 import { REACT_APP_API_BASE_URL } from "@env";
 import { Data } from "src/hooks/Data";
+import { useColor } from "src/hooks/useColor";
 
 type HomeScreenNavigationProp =
   | StackNavigationProp<RootStackParamList>
@@ -31,6 +36,8 @@ const Home: FC<HomeType> = ({ navigation }) => {
     `${REACT_APP_API_BASE_URL}/movie/now_playing?language=en-US&page=1`,
     "Now playing"
   );
+  const { iconColor } = useColor();
+
   const {
     data: upcomming,
     isFetching: isfetching,
@@ -50,39 +57,33 @@ const Home: FC<HomeType> = ({ navigation }) => {
   }
   if (isFetching) {
     return (
-      <SafeAreaView>
+      <SafeAreaViewStyled>
         <Text>Loading...</Text>
-      </SafeAreaView>
+      </SafeAreaViewStyled>
     );
   }
   if (isError) {
     return (
-      <SafeAreaView>
+      <SafeAreaViewStyled>
         <Text>Error</Text>
-      </SafeAreaView>
+      </SafeAreaViewStyled>
     );
   }
 
   if (isFetched) {
     return (
-      <SafeAreaView
-        style={{
-          marginTop: Platform.OS === "android" ? 50 : 0,
-        }}
-      >
+      <SafeAreaViewStyled>
         <ScrollView>
           <Container className="flex flex-row justify-between items-end">
             <StyledView className="pt-3">
               <StyledText>Hi, User</StyledText>
-              <StyledText className="text-3xl font-bold">
-                Welcome Back
-              </StyledText>
+              <StyledText class="text-3xl font-bold">Welcome Back</StyledText>
             </StyledView>
             <StyledView>
               <Ionicons
                 name="notifications"
                 size={30}
-                color="black"
+                color={iconColor}
                 style={{ marginBottom: 5 }}
               />
             </StyledView>
@@ -137,7 +138,7 @@ const Home: FC<HomeType> = ({ navigation }) => {
             )}
           </StyledView>
         </ScrollView>
-      </SafeAreaView>
+      </SafeAreaViewStyled>
     );
   }
 };

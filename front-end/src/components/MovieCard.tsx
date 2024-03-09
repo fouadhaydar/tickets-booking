@@ -13,6 +13,7 @@ import { Genres, Movie } from "../hooks/Data";
 import { useFetchData } from "src/hooks/useFetchMovies";
 import { REACT_APP_API_BASE_URL } from "@env";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { useColor } from "src/hooks/useColor";
 
 type MovieCardTypeNavigationProp =
   | StackNavigationProp<RootStackParamList>
@@ -27,6 +28,7 @@ const MovieCard: FC<MovieCardType> = ({ id, Movie }) => {
   const navigation = useNavigation<MovieCardTypeNavigationProp>();
   const [fav, setFav] = useState(false);
   const [genersNames, setGenersNames] = useState<string[]>([]);
+  const { iconColor } = useColor();
 
   const { data: genres } = useFetchData<Genres>(
     `${REACT_APP_API_BASE_URL}/genre/movie/list?language=en`,
@@ -59,7 +61,7 @@ const MovieCard: FC<MovieCardType> = ({ id, Movie }) => {
 
   return (
     <PressableStyeld
-      className=" flex-1 mb-[15px] border-solid border-black rounded-2xl border-[1px] overflow-hidden"
+      className=" flex-1 mb-[15px] border-solid border-gray-500 rounded-2xl border-[1px] overflow-hidden"
       onPress={() => handlePress(id)}
       style={{
         position: "relative",
@@ -80,22 +82,37 @@ const MovieCard: FC<MovieCardType> = ({ id, Movie }) => {
         }}
         onPress={() => setFav((prev) => !prev)}
       />
-      <StyledView className=" p-3 gap-y-2">
-        <StyledText className="text-[14px] font-bold">{Movie.title}</StyledText>
-        <StyledView className="flex-row items-center gap-x-1">
-          <Ionicons name="calendar" size={14} color={"black"} />
-          <StyledText className="text-[12px] text-gray-500">
+      <StyledView
+        className=" p-3 "
+        style={{
+          rowGap: 12,
+        }}
+      >
+        <StyledText class="text-[14px] font-bold">{Movie.title}</StyledText>
+        <StyledView
+          className="flex-row items-center"
+          style={{
+            columnGap: 8,
+          }}
+        >
+          <Ionicons name="calendar" size={14} color={iconColor} />
+          <StyledText class="text-[12px] text-gray-500">
             {Movie.release_date}
           </StyledText>
         </StyledView>
-        <StyledView className=" gap-x-1 flex-row">
-          <StyledView className="flex-row items-start gap-x-1">
-            <Ionicons name="videocam" size={16} color={"black"} />
+        <StyledView className="flex-row">
+          <StyledView
+            className="flex-row items-start "
+            style={{
+              columnGap: 8,
+            }}
+          >
+            <Ionicons name="videocam" size={16} color={iconColor} />
             {genersNames.length > 0 && (
               <FlatList
                 data={genersNames}
                 renderItem={({ item, index }) => (
-                  <StyledText className="text-[14px] text-gray-500">
+                  <StyledText class="text-[14px] text-gray-500">
                     {item}
                     {index < genersNames.length - 1 ? ", " : "."}
                   </StyledText>

@@ -12,16 +12,21 @@ import Details from "../screens/Details";
 import SelectSeats from "src/screens/SelectSeats";
 import { MaterialIcons } from "@expo/vector-icons";
 import Favorites from "src/screens/Favorites";
+import { useColorScheme } from "nativewind";
+import { useColor } from "src/hooks/useColor";
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootTabParamsLits>();
 
 const TabNavigation = () => {
+  const { colorScheme } = useColorScheme();
+  const { iconColor, textColor, backgroundColor } = useColor();
   return (
     <Tab.Navigator
       screenOptions={() => ({
         tabBarStyle: {
-          height: 100,
+          height: 90,
+          backgroundColor: colorScheme == "dark" ? "black" : "white",
         },
         tabBarIconStyle: {
           marginTop: 15,
@@ -30,13 +35,18 @@ const TabNavigation = () => {
           fontWeight: "bold",
         },
         headerShown: false,
+        tabBarActiveTintColor: "orange",
+        tabBarInactiveTintColor: iconColor,
+        tabBarShowLabel: false,
       })}
     >
       <Tab.Screen
         name="home"
         component={Home}
         options={{
-          tabBarIcon: () => <Ionicons name="home" size={24} />,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home" size={24} color={color} />
+          ),
           title: "Home",
         }}
       />
@@ -44,7 +54,9 @@ const TabNavigation = () => {
         name="favorites"
         component={Favorites}
         options={{
-          tabBarIcon: () => <MaterialIcons name="watch-later" size={24} />,
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="favorite" size={24} color={color} />
+          ),
           title: "Favorite",
         }}
       />
@@ -52,8 +64,8 @@ const TabNavigation = () => {
         name="movies"
         component={Movies}
         options={{
-          tabBarIcon: () => (
-            <Ionicons name="videocam" size={24} color="black" />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="videocam" size={24} color={color} />
           ),
           title: "Movies",
         }}
@@ -62,7 +74,9 @@ const TabNavigation = () => {
         name="profile"
         component={Profile}
         options={{
-          tabBarIcon: () => <Ionicons name="person" size={24} color="black" />,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person" size={24} color={color} />
+          ),
           title: "Profile",
         }}
       />
@@ -71,12 +85,22 @@ const TabNavigation = () => {
 };
 
 const RootStackNavigator = () => {
+  const { backgroundColor, btnTextColor, iconColor } = useColor();
+  const { colorScheme } = useColorScheme();
   return (
     <NavigationContainer>
       <RootStack.Navigator
         screenOptions={{
           headerBackTitle: "",
           headerShown: false,
+          headerStyle: {
+            backgroundColor: colorScheme == "dark" ? "black" : "white",
+            borderBottomColor: "gray",
+          },
+          headerTitleStyle: {
+            color: colorScheme == "dark" ? "white" : "black",
+          },
+          headerTintColor: iconColor,
         }}
       >
         <RootStack.Group>
