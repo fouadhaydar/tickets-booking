@@ -30,7 +30,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("UserAuthetication")]
-    public async Task<IActionResult> UserAuthenticatino([FromBody] UserAuthenticationRequest userAuthenticationRequest)
+    public async Task<IActionResult> UserAuthentication([FromBody] UserAuthenticationRequest userAuthenticationRequest)
     {
 
         if (!ModelState.IsValid)
@@ -51,7 +51,6 @@ public class UserController : ControllerBase
 
             // Serialize object to JSON string
             var jsonContent = JsonConvert.SerializeObject(requestData);
-
             try
             {
                 // Make the POST request
@@ -66,7 +65,9 @@ public class UserController : ControllerBase
                     if (responseObject != null)
                     {
                         // Create the user if not presente or update his profile
-                        var user = await _unitOfWork.User.Find(x => x.UserName == userAuthenticationRequest.UserName);
+                        // get user name
+                        string userName = await GetUserNameAsync(responseObject.session_id);
+                        var user = await _unitOfWork.User.Find(x => x.UserName == userName);
                         if (user != null)
                         {
                             // Update the user
@@ -83,7 +84,7 @@ public class UserController : ControllerBase
                             // Craete new user
                             bool created = await _unitOfWork.User.Add(new User
                             {
-                                UserName = userAuthenticationRequest.UserName,
+                                UserName = userName,
                                 Password = responseObject.session_id
                             });
                             if (created) return Ok(new AuthenticationResponce
@@ -121,6 +122,20 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpPost("Show_User_Tickets")]
+    public async Task<IActionResult> Show_User_Tickets([FromBody] ShowUserTicketsRequest ShowUserTicketsRequest)
+    {
+        var user = await _unitOfWork.User.Find(x => x.UserName == ShowUserTicketsRequest.UserName && x.Password == ShowUserTicketsRequest.Password);
+        if (user == null)
+        {
+            return BadRequest(new { error = true, message = "Please sign in correctly before requesting a ticket" });
+        }
+
+        var tickets = await _unitOfWork.User.GetTickets(user.Id);
+        return Ok(tickets);
+    }
+
+
     [HttpGet("CheckuserExists")]
     [ProducesResponseType(statusCode: StatusCodes.Status200OK)]
     [ProducesResponseType(statusCode: StatusCodes.Status500InternalServerError)]
@@ -136,11 +151,50 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
+
+    private async Task<string> GetUserNameAsync(string session_id)
+    {
+        string url = "https://api.themoviedb.org/3/account/21028464?session_id=" + session_id;
+
+        using (var client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _configuration.API_Token);
+            try
+            {
+                // Make the POST request
+                var response = await client.GetAsync(url);
+
+                // Check for successful response
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var name = JsonConvert.DeserializeObject<ResponceUserDetail>(content);
+                    return name.username;
+                }
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+    }
+
     private class ResponseSessionIdRequest
     {
         public bool Success { get; set; }
         public string session_id { get; set; }
     }
 
+    private class ResponceUserDetail
+    {
+        public string id { get; set; }
+        public string iso_639_1 { get; set; }
+        public string iso_3166_1 { get; set; }
+        public string name { get; set; }
+        public string include_adult { get; set; }
+        public string username { get; set; }
+    }
 
 }

@@ -60,4 +60,13 @@ public class Repository<T> : IRepository<T> where T : BaseModel, new()
           .Update();
         return true;
     }
+
+    public async Task<List<T>> FindAll(Predicate<T> match)
+    {
+        var model = await _supabaseClient.From<T>().Get();
+        var items = model.Models.FindAll(match);
+        return items;
+    }
+
+
 }
